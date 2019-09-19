@@ -1,0 +1,9 @@
+server:
+ port: 8083
+spring:
+ thymeleaf:
+  mode: LEGACYHTML5
+  cache: false
+ devtools:
+  restart:
+   enabled: true

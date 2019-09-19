@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+		<title>Dashboard Template for Bootstrap</title>
+		<!--thymeleaf这个标签自动给你加上项目名路径,  Bootstrap core CSS -->
+		<link th:href="@{/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css}" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="../../static/css/dashboard.css" th:href="@{/static/css/dashboard.css}" rel="stylesheet">
+
+	</head>
+
+	<body>
+		<!--引入抽取的topbar-->
+		<!--模板名：会使用thymeleaf的前后缀配置规则进行解析-->
+		<div th:replace="common/topbar::topbar"></div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<!--引入侧边栏-->
+				<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+					<div th:replace="common/sidebar::#sidebar(activeUri='emps')"></div>
+				</nav>
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+					<!--需要区分是员工修改还是添加；-->
+					<form th:action="@{/emp}" method="post">
+						<!--发送put请求修改员工数据-->
+						<!--
+						1、SpringMVC中配置HiddenHttpMethodFilter;（SpringBoot自动配置好的）
+						2、页面创建一个post表单
+						3、创建一个input项，name="_method";值就是我们指定的请求方式
+						-->
+						<input type="hidden" name="_method" th:if="${emp!=null}" value="put" />
+						<input type="hidden" name="id" th:if="${emp!=null}" th:value="${emp.id}">
+						<div class="form-group">
+							<label>LastName</label>
+							<input name="lastName" type="text" class="form-control" placeholder="sky"
+								   th:value="${emp!=null}?${emp.lastName}">
+						</div>
+						<div class="form-group">
+							<label>Email</label>
+							<input name="email" type="email" class="form-control" placeholder="sky@qq.com"
+								   th:value="${emp!=null}?${emp.email}">
+						</div>
+						<div class="form-group">
+							<label>Gender</label><br/>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="gender" value="1" th:checked="${emp!=null}?${emp.gender==1}">
+								<label class="form-check-label">男</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="radio" name="gender" value="0" th:checked="${emp!=null}?${emp.gender==0}">
+								<label class="form-check-label">女</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>department</label>
+							<!--提交的是部门的id-->
+							<select class="form-control" name="department.id"><!--${emp!=null}?-->
+								<option th:selected="${emp!=null}?${dept.id == emp.department.id}"
+										th:value="${dept.id}" th:each="dept:${depts}" th:text="${dept.departmentName}">1</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Birth</label>
+							<input name="birth" type="text" class="form-control" placeholder="1999-09-09"
+								   th:value="${emp!=null}?${#dates.format(emp.birth, 'yyyy-MM-dd')}">
+							<!--默认日期是以/分隔必须在主配置文件中配置spring mvc的日期格式-->
+						</div>
+						<button type="submit" class="btn btn-primary" th:text="${emp!=null}?'修改':'添加'">添加</button>
+					</form>
+				</main>
+			</div>
+		</div>
+
+
+
+	</body>
+
+</html>

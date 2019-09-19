@@ -1,0 +1,17 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+      #true表示启动热部署插件
+
+student:
+  name: sky_${random.uuid}
+  age: 22
+  birthday: 1996/09/09
+  teachers: {"wang": "c++"}
+  teacher:
+    name: "王"
+    age: 36
+
+server:
+  port: 8083

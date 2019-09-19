@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+	<title>Dashboard Template for Bootstrap</title>
+
+	<!-- Bootstrap core CSS -->
+	<link th:href="@{/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css}"  rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link href="../../static/css/dashboard.css" th:href="@{/static/css/dashboard.css}" rel="stylesheet">
+</head>
+
+<body>
+<!--为了应用公共的片段部分, 这个注释掉
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+	<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">[[${session.user}]]</a>
+	<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+	<ul class="navbar-nav px-3">
+		<li class="nav-item text-nowrap">
+			<a class="nav-link" href="#">Sign out</a>
+		</li>
+	</ul>
+</nav>
+-->
+
+
+<!--引入公共的top bar, common/index代表是common/index.HTML, top bar表示片段名top bar-->
+<!--replace 直接将外层的div替换掉, 不要多加一个额外的元素, so, 用replace-->
+<!--<div th:insert="~{common/index::topbar}"></div>-->
+<!--第二种写法:<div th:replace="~{common/index::topbar}"></div>-->
+<div th:replace="common/topbar::topbar"></div>
+<div class="container-fluid">
+	<div class="row">
+		<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+			<!--<div class="sidebar-sticky">
+				<ul class="nav flex-column">
+					<li class="nav-item">
+						<a class="nav-link active" href="#">
+							<span data-feather="home"></span>
+							Dashboard <span class="sr-only">(current)</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file"></span>
+							Orders
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="shopping-cart"></span>
+							Products
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#" th:href="@{/emps}">
+							<span data-feather="users"></span>
+							员工管理
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="bar-chart-2"></span>
+							Reports
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="layers"></span>
+							Integrations
+						</a>
+					</li>
+				</ul>
+
+				<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+					<span>Saved reports</span>
+					<a class="d-flex align-items-center text-muted" href="#">
+						<span data-feather="plus-circle"></span>
+					</a>
+				</h6>
+				<ul class="nav flex-column mb-2">
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text"></span>
+							Current month
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text"></span>
+							Last quarter
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text"></span>
+							Social engagement
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">
+							<span data-feather="file-text"></span>
+							Year-end sale
+						</a>
+					</li>
+				</ul>
+			</div>-->
+			<!--引入侧边栏-->
+			<div th:replace="common/sidebar::#sidebar(activeUri='emps')"></div>
+		</nav>
+
+		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+
+
+
+
+			<h2>employee list</h2><!--可以动态替换掉-->
+			<div class="table-responsive">
+				<table class="table table-striped table-sm">
+					<thead>
+					<tr>
+						<th>#</th>
+						<th>lastName</th>
+						<th>email</th>
+						<th>gender</th>
+						<th>departmentName</th>
+						<th>birth</th>
+						<th>operation</th>
+
+					</tr>
+					</thead>
+					<tbody>
+					<tr th:each="emp:${emps}">
+						<!--thymeleaf和jsp一样都可以根据getter方法获取到值??-->
+						<td th:text="${emp.id}"></td>
+						<td>[[${emp.lastName}]]</td>
+						<td th:text="${emp.email}"></td>
+						<td th:text="${emp.gender}==0?'女':'男'"></td>
+						<td th:text="${emp.department.departmentName}"></td>
+						<td th:text="${#dates.format(emp.birth, 'yyyy-MM-dd')}"></td>
+						<td>
+							<a  class="btn btn-sm btn-primary" th:href="@{/emp/}+${emp.id}">编辑</a>
+							<!--<input type="button" class="btn btn-sm btn-danger" value="删除" />-->
+
+							<button id="delete_btn"  th:attr="del_uri=@{/emp/} + ${emp.id}"
+								   class="btn btn-sm btn-danger deleteBtn">删除</button>
+
+							<a class="btn btn-sm btn-success" href="/emp">新增</a>
+							<!--超链接本来就是get方式-->
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</main>
+	</div>
+	<form id="delete_form"  method="post" ><!--不能写action, 解析不出来-->
+		<input type="hidden" name="_method" value="DELETE">
+	</form>
+</div>
+<!--
+form 表单中 put,delete,patch 的方法从原生的角度来说，
+这个是不支持这个部分的，但是 可以通过欺骗的方式，让后台认为可以通过这样的方式进行传递
+<form action="/foo/bar" method="POST">
+    <input type="hidden" name="_method" value="PUT"/>
+    <input type="submit"  value="submit"/>
+</form>
+-->
+
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	$(".deleteBtn").click(function f(){
+		$("#delete_form").attr("action", $(this).attr("del_uri")).submit();
+		return true;
+	});
+
+</script>
+</body>
+</html>

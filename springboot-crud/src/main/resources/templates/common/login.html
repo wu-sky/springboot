@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+
+
+    <title>Sign in</title>
+
+    <!--thymeleaf这个标签自动给你加上项目名路径,  Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.3.1/dist/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- 本地自定义的css文件 href="../../static/css/signin.css" -->
+    <link th:href="@{/static/css/signin.css}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+
+<form class="form-signin" action="/user/login" method="post">
+
+    <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+
+    <p style="color: red; font:  normal 12px 黑体;" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+
+    <label class="sr-only" th:text="#{login.username}">username</label><!--for="inputEmail"-->
+
+    <input type="email" id="inputEmail" name="username" class="form-control" placeholder="Email address"
+           th:placeholder="#{login.username}" autofocus>
+
+
+    <label for="inputPassword" class="sr-only" th:text="#{login.password}">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password"
+           th:placeholder="#{login.password}">
+
+
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"/> [[#{login.remember}]]
+        </label>
+    </div>
+
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.btn}">Please sign in</button>
+    <a class="btn btn-sm" th:href="@{/login(l='zh_CN')}">中文</a>
+    <a class="btn btn-sm" th:href="@{/login(l='en_US')}">English</a>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+
+</form>
+</body>
+</html>
+
+<!--在idea中按住CTRL+f9 把改动的页面热部署-->

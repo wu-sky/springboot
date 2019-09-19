@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>thyme(桃花运of me)</title>
+</head>
+<body>
+
+<h1 th:text="${msg}"></h1>
+
+
+<ul>
+    <li th:each="user: ${list}"><span th:text=" ${user.name}"></span></li>
+</ul>
+
+<h4 id="" th:each="user:${list}"    th:text="${user.getName()}"></h4>
+<!--报错:<h4 id="" th:each="user:${list}"
+    th:text="${user.getName()}+${user.getId()+${user.getCreateDay()}}"></h4>-->
+
+</body>
+</html>
